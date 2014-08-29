@@ -1,7 +1,7 @@
 ## Percona Server Dockerfile
 
 
-This repository contains **Dockerfile** of [Percona Server](http://www.percona.com/software/percona-server) for [Docker](https://www.docker.com/)'s [automated build](https://registry.hub.docker.com/u/dockerfile/percona/) published to the public [Docker Hub Registry](https://registry.hub.docker.com/).
+This repository contains a **Dockerfile** for [Percona Server](http://www.percona.com/software/percona-server) for [Docker](https://www.docker.com/)'s [automated build](https://registry.hub.docker.com/u/dockerfile/percona/) published to the public [Docker Hub Registry](https://registry.hub.docker.com/).
 
 
 ### Dependencies
