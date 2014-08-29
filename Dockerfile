@@ -7,7 +7,7 @@
 # Pull base image.
 FROM dockerfile/ubuntu
 
-ADD mysql_bootstrap.sh
+ADD mysql_bootstrap.sh /tmp/mysql_bootstrap.sh
 
 RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A && \
     echo "deb http://repo.percona.com/apt `lsb_release -cs` main" > /etc/apt/sources.list.d/percona.list && \
@@ -17,8 +17,8 @@ RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A && \
     rm -rf /var/lib/apt/lists/* && \
     sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/mysql/my.cnf && \
     sed -i 's/^\(log_error\s.*\)/# \1/' /etc/mysql/my.cnf && \
-    bash mysql_bootstrap.sh && \
-    rm -f mysql_bootstrap.sh
+    bash /tmp/mysql_bootstrap.sh && \
+    rm -f /tmp/mysql_bootstrap.sh
 
 # Define mountable directories.
 VOLUME ["/data", "/etc/mysql", "/var/lib/mysql"]
