@@ -1,5 +1,5 @@
 #
-# Percona Server Dockerfile
+# Percona Server 5.6 Dockerfile
 #
 # https://github.com/dockerfile/percona
 #
@@ -7,14 +7,28 @@
 # Pull base image.
 FROM dockerfile/ubuntu
 
-# Install Percona Server.
-RUN \
-  apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A && \
-  echo 'deb http://repo.percona.com/apt trusty main' | tee /etc/apt/sources.list.d/percona.list && \
-  apt-get update && \
-  apt-get install -y percona-server-server-5.6 && \
-  rm -rf /var/lib/apt/lists/* && \
-  sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/mysql/my.cnf && \
+MAINTAINER Marcus Bointon <marcus@synchromedia.co.uk>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# Update everything
+RUN apt-get update -qq && apt-get upgrade -y -q && apt-get dist-upgrade -y -q
+
+# Add Percona repo
+RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A
+#RUN gpg -a --export CD2EFD2A | apt-key add -
+RUN echo "deb http://repo.percona.com/apt `lsb_release -cs` main" > /etc/apt/sources.list.d/percona.list && \
+    echo "deb-src http://repo.percona.com/apt `lsb_release -cs` main" >> /etc/apt/sources.list.d/percona.list
+RUN apt-get update -qq
+
+# Install Percona Server and xtrabackup
+RUN apt-get install -y -qq percona-server-5.6 xtrabackup
+
+# Clean up
+RUN rm -rf /var/lib/apt/lists/*
+
+# Set up MySQL
+RUN sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/mysql/my.cnf && \
   sed -i 's/^\(log_error\s.*\)/# \1/' /etc/mysql/my.cnf && \
   echo "mysqld_safe &" > /tmp/config && \
   echo "sleep 5" >> /tmp/config && \
